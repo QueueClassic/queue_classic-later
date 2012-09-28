@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
 
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
+
+  gem.add_dependency "queue_classic", "~> 2.0"
 end
