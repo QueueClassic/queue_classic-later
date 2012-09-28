@@ -1,4 +1,5 @@
 require "queue_classic"
+require "queue_classic/later/version"
 
 module QC
   module Later

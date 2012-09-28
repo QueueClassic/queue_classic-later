@@ -1,1 +1,1 @@
-require "queue_classic/later/version"
+require "queue_classic/later"
