@@ -46,6 +46,10 @@ QC.enqueue_at(Time.new(2012, 10, 13, 12, 34, 56), "Kernel.puts", "hello world")
 
 `QC::Later.tick` will enqueue these jobs to be worked by your worker(s) at the appropriate time.
 
+## Credit
+
+Heavily inspired by [resque-scheduler](https://github.com/bvandenbos/resque-scheduler).
+
 ## Contributing
 
 1. Fork it
