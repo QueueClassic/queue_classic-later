@@ -28,7 +28,7 @@ module QC
       def insert(q_name, not_before, method, args)
         QC.log_yield(:action => "insert_later_job") do
           s = "INSERT INTO #{QC::Later::TABLE_NAME} (q_name, not_before, method, args) VALUES ($1, $2, $3, $4)"
-          QC::Conn.execute(s, q_name, not_before, method, QC::OkJson.encode(args))
+          QC::Conn.execute(s, q_name, not_before, method, MultiJson.encode(args))
         end
       end
 
@@ -55,7 +55,7 @@ module QC
     def tick
       QC::Later::Queries.delete_and_capture(Time.now).each do |job|
         queue = QC::Queue.new(job["q_name"])
-        queue.enqueue(job["method"], *QC::OkJson.decode(job["args"]))
+        queue.enqueue(job["method"], *MultiJson.decode(job["args"]))
       end
     end
   end
