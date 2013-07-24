@@ -53,9 +53,11 @@ module QC
 
     # run QC::Later.tick as often as necessary via your clock process
     def tick
-      QC::Later::Queries.delete_and_capture(Time.now).each do |job|
-        queue = QC::Queue.new(job["q_name"])
-        queue.enqueue(job["method"], *MultiJson.decode(job["args"]))
+      QC::Conn.transaction do
+        QC::Later::Queries.delete_and_capture(Time.now).each do |job|
+          queue = QC::Queue.new(job["q_name"])
+          queue.enqueue(job["method"], *MultiJson.decode(job["args"]))
+        end
       end
     end
   end
