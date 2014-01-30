@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "queue_classic", ">= 2.1.3"
+  gem.add_dependency "multi_json"
 end
