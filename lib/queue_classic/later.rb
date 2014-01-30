@@ -1,3 +1,5 @@
+require "json"
+
 require "queue_classic"
 require "queue_classic/later/version"
 
@@ -28,7 +30,7 @@ module QC
       def insert(q_name, not_before, method, args)
         QC.log_yield(:action => "insert_later_job") do
           s = "INSERT INTO #{QC::Later::TABLE_NAME} (q_name, not_before, method, args) VALUES ($1, $2, $3, $4)"
-          QC::Conn.execute(s, q_name, not_before, method, MultiJson.encode(args))
+          QC::Conn.execute(s, q_name, not_before, method, JSON.dump(args))
         end
       end
 
@@ -56,7 +58,7 @@ module QC
       QC::Conn.transaction do
         QC::Later::Queries.delete_and_capture(Time.now).each do |job|
           queue = QC::Queue.new(job["q_name"])
-          queue.enqueue(job["method"], *MultiJson.decode(job["args"]))
+          queue.enqueue(job["method"], *JSON.parse(job["args"]))
         end
       end
     end
