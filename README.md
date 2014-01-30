@@ -20,6 +20,8 @@ Or install it yourself as:
 
 First, follow the queue_classic setup directions.
 
+**NOTE for Ruby 1.8.7**: *You'll also need to install the `json` gem--but you really should upgrade to a newer version of ruby, it's no longer being maintained.*
+
 QC::Later has database setup to do, much like queue_classic itself. Use the same process suggested by the queue_classic
 directions to run `QC::Later::Setup.create` in a database migration or similar.
 
