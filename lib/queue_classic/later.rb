@@ -1,3 +1,5 @@
+require "multi_json"
+
 require "queue_classic"
 require "queue_classic/later/version"
 
