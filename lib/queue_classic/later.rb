@@ -12,14 +12,14 @@ module QC
       extend self
 
       def create
-        QC::Conn.transaction do
-          QC::Conn.execute("CREATE TABLE #{QC::Later::TABLE_NAME} (q_name varchar(255), method varchar(255), args text, not_before timestamptz)")
+        QC.default_conn_adapter.connection.transaction do
+          QC.default_conn_adapter.execute("CREATE TABLE #{QC::Later::TABLE_NAME} (q_name varchar(255), method varchar(255), args text, not_before timestamptz)")
         end
       end
 
       def drop
-        QC::Conn.transaction do
-          QC::Conn.execute("DROP TABLE IF EXISTS #{QC::Later::TABLE_NAME}")
+        QC.default_conn_adapter.connection.transaction do
+          QC.default_conn_adapter.execute("DROP TABLE IF EXISTS #{QC::Later::TABLE_NAME}")
         end
       end
     end
@@ -30,14 +30,14 @@ module QC
       def insert(q_name, not_before, method, args)
         QC.log_yield(:action => "insert_later_job") do
           s = "INSERT INTO #{QC::Later::TABLE_NAME} (q_name, not_before, method, args) VALUES ($1, $2, $3, $4)"
-          QC::Conn.execute(s, q_name, not_before, method, JSON.dump(args))
+          QC.default_conn_adapter.execute(s, q_name, not_before, method, JSON.dump(args))
         end
       end
 
       def delete_and_capture(not_before)
         s = "DELETE FROM #{QC::Later::TABLE_NAME} WHERE not_before <= $1 RETURNING *"
         # need to ensure we return an Array even if Conn.execute returns a single item
-        [QC::Conn.execute(s, not_before)].compact.flatten
+        [QC.default_conn_adapter.execute(s, not_before)].compact.flatten
       end
     end
 
@@ -55,7 +55,7 @@ module QC
 
     # run QC::Later.tick as often as necessary via your clock process
     def tick
-      QC::Conn.transaction do
+      QC.default_conn_adapter.connection.transaction do
         QC::Later::Queries.delete_and_capture(Time.now).each do |job|
           queue = QC::Queue.new(job["q_name"])
           queue.enqueue(job["method"], *JSON.parse(job["args"]))
