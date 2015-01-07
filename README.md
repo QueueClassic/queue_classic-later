@@ -2,6 +2,8 @@
 
 Do things later with [queue_classic](https://github.com/ryandotsmith/queue_classic).
 
+**IMPORTANT: this functionality is built in queue_classic starting with 3.1.**
+
 **IMPORTANT: this branch is for QueueClassic 3. See the [0.3-stable](https://github.com/dpiddy/queue_classic-later/tree/0.3-stable) branch for prior version support.**
 
 ## Installation
