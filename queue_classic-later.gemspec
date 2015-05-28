@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "queue_classic", "~> 3.0"
+  gem.add_development_dependency "rake"
 end
